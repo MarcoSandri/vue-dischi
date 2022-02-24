@@ -27,7 +27,7 @@ export default {
         background-color: $secondary;
         padding: 1rem;
         color: $label;
-        margin-bottom: 1rem;
+        margin: 1rem 0;
         text-align: center;
         
         img {

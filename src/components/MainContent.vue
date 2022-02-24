@@ -1,7 +1,7 @@
 <template>
   <main>
       <div class="container">
-          <AlbumCard v-for="(album, index) in albumList" :key="index" :image="album.poster" :title="album.title" :artist="album.author" :year="album.year"/>
+          <AlbumCard v-for="(album, index) in filtered" :key="index" :image="album.poster" :title="album.title" :artist="album.author" :year="album.year" />
       </div>
   </main>
 </template>
@@ -15,9 +15,13 @@ export default {
     components : {
         AlbumCard
     },
+    props: {
+        selectedValue : String
+    },
     data() {
         return {
-            albumList : []
+            albumList : [],
+            genres : [],
         }
     },
     methods : {
@@ -26,16 +30,48 @@ export default {
             .then((response) => {
                 // handle success
                 this.albumList = response.data.response
+                this.getAlbumsGenre();
                 console.log(response.data.response);
             })
             .catch(function (error) {
                 // handle error
                 console.log(error);
             });
-        }
+        },
+
+        getAlbumsGenre() {
+            this.genres.push(this.albumList[0].genre);
+            for(let i = 0; i < this.albumList.length; i++) {
+
+                if(!this.genres.includes(this.albumList[i].genre)) {
+                    
+                    this.genres.push(this.albumList[i].genre);
+                }
+            }
+
+            console.log(this.genres);
+            this.$emit('getGenres', this.genres);
+        },
+
+        
     },
     mounted() {
         this.getAlbums();
+    },
+    computed: {
+
+        filtered() {
+            return this.albumList.filter((album) => {
+                if(this.selectedValue != "All") {
+                    if(album.genre == this.selectedValue) {
+                        return true;
+                    }
+                    return false;
+                }
+                else return true;
+            })
+        }
+
     }
 }
 </script>
@@ -52,7 +88,7 @@ export default {
             width: 60%;
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
+            justify-content: space-around;
         }
     }
 </style>

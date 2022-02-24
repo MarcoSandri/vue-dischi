@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <HeaderComponent />
-    <MainContent class="main"/>
+    <HeaderComponent :genreList="genres" @sendValue="printValue"/>
+    <MainContent class="main" @getGenres="printGenres" :selectedValue="selectedValue"/>
   </div>
 </template>
 
@@ -14,6 +14,22 @@ export default {
   components: {
     HeaderComponent,
     MainContent
+  },
+  data() {
+    return {
+      genres : [],
+      selectedValue : ""
+    }
+  },
+  methods : {
+    printGenres(allGenres) {
+      this.genres = allGenres;
+      console.log("i generi nell'app sono: " + this.genres)
+    },
+    printValue(selected) {
+      this.selectedValue = selected;
+      console.log("IL VALORE SELEZIONATO SULL'APP è : " + this.selectedValue)
+    }
   }
 }
 </script>
